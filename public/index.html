@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="JLPT N3 Vocabulary Flashcard - Learn Japanese vocabulary with interactive flashcards" />
+  <title>JLPT N3 Vocabulary Flashcard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1>🇯🇵 JLPT N3 Vocabulary Flashcard</h1>
+      <p>สุ่มคำศัพท์แบบไม่ซ้ำ จนกว่าจะ Reset</p>
+    </header>
+
+    <section class="status-card" role="status" aria-live="polite">
+      <div>
+        <strong>Total:</strong>
+        <span id="totalCount" aria-label="Total vocabulary count">-</span>
+      </div>
+      <div>
+        <strong>Used:</strong>
+        <span id="usedCount" aria-label="Used vocabulary count">0</span>
+      </div>
+      <div>
+        <strong>Remaining:</strong>
+        <span id="remainingCount" aria-label="Remaining vocabulary count">-</span>
+      </div>
+      <div class="reset-section">
+        <button id="resetBtn" class="danger reset-btn" onclick="resetMemory()" aria-describedby="reset-help">
+          🔄 Reset
+        </button>
+      </div>
+    </section>
+
+    <main class="card" role="main">
+      <div class="label">คำใบ้แรก: Reading</div>
+      <div id="reading" class="main-text" aria-live="polite">กด Start เพื่อเริ่ม</div>
+
+      <div id="vocabularyBox" class="hidden-section">
+        <div class="label">คำใบ้ที่สอง: Vocabulary</div>
+        <div id="vocabulary" class="vocab-text" aria-live="polite"></div>
+      </div>
+
+      <div id="meaningBox" class="hidden-section answer-box">
+        <div class="label">เฉลย: Meaning</div>
+        <div id="meaning" class="meaning-text" aria-live="polite"></div>
+
+        <div class="small-info">
+          <strong>Romaji:</strong>
+          <span id="romaji" aria-live="polite"></span>
+        </div>
+      </div>
+    </main>
+
+    <section class="button-area" role="toolbar" aria-label="Flashcard controls">
+      <button id="startBtn" onclick="startGame()" aria-describedby="start-help">
+        🚀 Start
+      </button>
+      <button id="showVocabBtn" onclick="showVocabulary()" disabled aria-describedby="vocab-help">
+        📝 Show Vocabulary
+      </button>
+      <button id="showMeaningBtn" onclick="showMeaning()" disabled aria-describedby="meaning-help">
+        💡 Show Meaning
+      </button>
+      <button id="nextBtn" onclick="nextCard()" disabled aria-describedby="next-help">
+        ➡️ Next
+      </button>
+    </section>
+
+    <section class="note">
+      <p>
+        <strong>วิธีเล่น:</strong> ดูคำอ่านก่อน → ถ้านึกไม่ออกกด Show Vocabulary → กด Show Meaning เพื่อดูเฉลย → กด Next เพื่อสุ่มคำถัดไป
+      </p>
+      <p class="keyboard-shortcuts">
+        <strong>Keyboard shortcuts:</strong> Space/Enter (next action), V (vocabulary), M (meaning), N (next), Ctrl+R (reset)
+      </p>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
