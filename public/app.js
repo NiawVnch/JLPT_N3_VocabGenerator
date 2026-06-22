@@ -2,6 +2,95 @@ let currentItem = null;
 let totalCount = 0;
 
 const USED_IDS_KEY = "jlpt_n3_used_ids";
+const UNSPLASH_ACCESS_KEY = "SKJ70jrAhrPxiZiG3yKwi6bxxR1F7Or9PnbNbpCtsvY"; // Replace with your Unsplash API key
+
+// Function to search Unsplash with a specific query
+async function searchUnsplash(query) {
+  const response = await fetch(
+    `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape`,
+    {
+      headers: {
+        'Authorization': `Client-ID ${UNSPLASH_ACCESS_KEY}`
+      }
+    }
+  );
+  
+  if (!response.ok) {
+    throw new Error('Failed to fetch image');
+  }
+  
+  return await response.json();
+}
+
+// Function to fetch image from Unsplash API with hybrid search
+async function fetchMeaningImage(vocabulary, meaning, romaji) {
+  try {
+    // Show loading indicator
+    document.getElementById("imageLoading").style.display = "block";
+    document.getElementById("meaningImage").style.display = "none";
+    
+    let data = null;
+    let searchQuery = "";
+    let imageFound = false;
+    
+    // Strategy 1: Try Japanese vocabulary first
+    if (!imageFound && vocabulary) {
+      searchQuery = vocabulary.trim();
+      console.log('Searching with Japanese:', searchQuery);
+      data = await searchUnsplash(searchQuery);
+      if (data.results && data.results.length > 0) {
+        imageFound = true;
+      }
+    }
+    
+    // Strategy 2: Try English meaning as fallback
+    if (!imageFound && meaning) {
+      searchQuery = meaning.split(',')[0].trim();
+      console.log('Searching with English:', searchQuery);
+      data = await searchUnsplash(searchQuery);
+      if (data.results && data.results.length > 0) {
+        imageFound = true;
+      }
+    }
+    
+    // Strategy 3: Try romaji as last resort
+    if (!imageFound && romaji) {
+      searchQuery = romaji.trim();
+      console.log('Searching with romaji:', searchQuery);
+      data = await searchUnsplash(searchQuery);
+      if (data.results && data.results.length > 0) {
+        imageFound = true;
+      }
+    }
+    
+    if (imageFound && data.results.length > 0) {
+      const imageUrl = data.results[0].urls.small;
+      const imageElement = document.getElementById("meaningImage");
+      
+      imageElement.src = imageUrl;
+      imageElement.alt = `Image representing: ${vocabulary} (${meaning})`;
+      
+      // Hide loading and show image when loaded
+      imageElement.onload = () => {
+        document.getElementById("imageLoading").style.display = "none";
+        imageElement.style.display = "block";
+        console.log('Image loaded successfully with query:', searchQuery);
+      };
+      
+      imageElement.onerror = () => {
+        document.getElementById("imageLoading").style.display = "none";
+        console.log('Image failed to load');
+      };
+    } else {
+      // No image found with any strategy
+      document.getElementById("imageLoading").style.display = "none";
+      console.log('No images found with any search strategy');
+    }
+  } catch (error) {
+    console.error('Error fetching image:', error);
+    document.getElementById("imageLoading").style.display = "none";
+  }
+}
 
 function getUsedIds() {
   const raw = localStorage.getItem(USED_IDS_KEY);
@@ -41,6 +130,11 @@ function resetCardView() {
   document.getElementById("vocabulary").textContent = "";
   document.getElementById("meaning").textContent = "";
   document.getElementById("romaji").textContent = "";
+  
+  // Reset image
+  document.getElementById("meaningImage").style.display = "none";
+  document.getElementById("imageLoading").style.display = "none";
+  document.getElementById("meaningImage").src = "";
 
   document.getElementById("showVocabBtn").disabled = false;
   document.getElementById("showMeaningBtn").disabled = false;
@@ -123,6 +217,9 @@ function showMeaning() {
 
   document.getElementById("nextBtn").disabled = false;
   document.getElementById("showMeaningBtn").disabled = true;
+  
+  // Fetch and display image using hybrid search strategy
+  fetchMeaningImage(currentItem.vocabulary, currentItem.meaning, currentItem.romaji);
   
   // Add smooth scroll to meaning section
   setTimeout(() => {

@@ -299,3 +299,59 @@ button.danger:hover:not(:disabled) {
     font-size: 22px;
   }
 }
+.image-container {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.meaning-image {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.meaning-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.image-loading {
+  color: #6b7280;
+  font-size: 16px;
+  font-style: italic;
+  padding: 20px;
+}
+/* Updated image centering styles */
+.image-container {
+  margin: 20px 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.meaning-image {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  display: block;
+  margin: 0 auto;
+}
+
+.meaning-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.image-loading {
+  color: #6b7280;
+  font-size: 16px;
+  font-style: italic;
+  padding: 20px;
+  text-align: center;
+}
